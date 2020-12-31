@@ -16,12 +16,19 @@ def create_passcode(identity , password):
 	passcode = Manager(identity , password)
 	c.execute('INSERT INTO passcode_manager VALUES (? , ?)',(passcode.identity , passcode.password))
 	conn.commit()
+	
+def check_exist(identity):
+	c.execute('SELECT * FROM passcode_manager WHERE identity=?',(identity,))
+	if(c.fetchone()):
+		return True
+	else:
+		return False
 
 
-print('WELCOME TO RAMAN PASSCODE MANAGER')
+print('\t\tWELCOME TO RAMAN PASSCODE MANAGER\n')
 password = input('Enter the passcode to see and add passcode    - ')
 while( password != 'raman'):
-	password = input('Wrong passcode enter again to see and add passcode')
+	password = input('\nWrong passcode enter again to see and add passcode - ')
 	
 #user has already enter the write passcode
 print()
@@ -53,18 +60,25 @@ while(opt != 0):
 	elif (opt == 4):
 		print()
 		iden = input('Enter Identity - ')
-		c.execute('DELETE FROM passcode_manager WHERE identity=?',(iden,))
-		conn.commit()
-		print(f'\nSuccessfully deleted passcode of identity - {iden}\n')
+		if not(check_exist(iden)):
+			print(f'\nNo passcode found for identity {iden} please try again.\n')
+		else:
+			c.execute('DELETE FROM passcode_manager WHERE identity=?',(iden,))
+			conn.commit()
+			print(f'\nSuccessfully deleted passcode of identity - {iden}\n')
 	
 	elif (opt == 5):
 		print()
 		iden = input('Enter Identity - ')
-		new_identity = input('Enter New Identity - ')
-		new_password = input('Enter New password - ')
-		c.execute('UPDATE passcode_manager SET identity=? , passcode=? WHERE identity=?',(new_identity,new_password,iden))
-		conn.commit()
-		print(f'\nSuccessfully updated passcode of old identity - {iden}\n')
+		if(check_exist(iden)):
+			
+			new_identity = input('Enter New Identity - ')
+			new_password = input('Enter New password - ')
+			c.execute('UPDATE passcode_manager SET identity=? , passcode=? WHERE identity=?',(new_identity,new_password,iden))
+			conn.commit()
+			print(f'\nSuccessfully updated passcode of old identity - {iden}\n')
+		else:
+			print(f'\nNO passcode found for identity {iden}\n')
 			
 	else:
 		print('Enter Information below to set new passcode.')
