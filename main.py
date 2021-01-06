@@ -25,35 +25,38 @@ def check_exist(identity):
 		return False
 
 
-print('\t\tWELCOME TO RAMAN PASSCODE MANAGER\n')
-password = input('Enter the passcode to see and add passcode    - ')
+
+password = input('Enter the MASTER password to get access  :  ')
 while( password != 'raman'):
-	password = input('\nWrong passcode enter again to see and add passcode - ')
-	
-#user has already enter the write passcode
-print()
-print('press 1 to see all passcodes \npress 2 to add new passcode \npress 3 to search \npress 4 to delete a passcode \npress 5 to update a passcode \npress 0 to exit \n')
-opt = int(input())
+	password = input('\nWrong MASTER password enter again to get access : ')
+
+#user has enter successfully to the app
+print('WELCOME TO RAMAN PASSCODE MANAGER')
+print('_________________________________\n')
+print('---------Menu---------')
+print('1. See all passcodes \n2. Add new passcode \n3. To search a passcode \n4. Delete a passcode \n5. Update a passcode \n0. Exit or Quit')
+print('__________________________________________')
+opt = int(input('\n   :  '))
 
 while(opt != 0):
 	if(opt == 1):
 		c.execute('SELECT * FROM passcode_manager')
-		print()
-		print('Passcodes are -')
-		print()
+		print('\nPasscodes are :\n')
 		for passcode in c.fetchall():
-			print(f'\t\tIdentity - {passcode[0]}')
-			print(f'\t\tpassword - {passcode[1]}')
-			print()
+			print('\t*****************************')
+			print(f'\t Identity - {passcode[0]}')
+			print(f'\t password - {passcode[1]}')
+			print('\t*****************************\n')
 	elif (opt == 3):
-		print()
-		iden = input('Enter identity - ')
+		iden = input('\nEnter identity - ')
 		c.execute('SELECT * FROM passcode_manager WHERE identity = ?',(iden,))
 		result = c.fetchone()
 		print()
 		if(result):
-			print(f'\t\tidentity -  {result[0]}')
-			print(f'\t\tpassword - {result[1]}')
+			print('\t*****************************')
+			print(f'\t Identity - {result[0]}')
+			print(f'\t password - {result[1]}')
+			print('\t*****************************\n')
 		else:
 			print(f'No passcode found for identity {iden} please try with another identity.\n')
 	
@@ -81,20 +84,24 @@ while(opt != 0):
 			print(f'\nNO passcode found for identity {iden}\n')
 			
 	else:
-		print('Enter Information below to set new passcode.')
-		identity = input('Identity -  ')
-		password = input('password -  ')
+		print('Enter Information below to set new passcode : \n')
+		identity = input('Identity :  ')
+		password = input('password :  ')
 		c.execute('SELECT * FROM passcode_manager WHERE identity=?',(identity,))
 		check = c.fetchall()
 		if len(check) == 0:
 			create_passcode(identity , password)
+			print(f'Successfully Added passcode with Identity - {identity}')
 		else:
 			print('Identity already exists please try with different identity')
 		print('\n')
 		
-	opt = int(input('press 1 to see all passcodes \npress 2 to add new passcode \npress 3 to search \npress 4 to delete a passcode \npress 5 to update a passcode \npress 0 to exit \n'))
+	print('-------------------Menu-----------------------------------')
+	print('1. See all passcodes \n2. Add new passcode \n3. To search a passcode \n4. Delete a passcode \n5. Update a passcode \n0. Exit or Quit \n')
+	print('__________________________________________')
+	opt = int(input('\n   :  '))
 	
-print('exited')
+print('See you Again! ')
 conn.close()
 	
 
